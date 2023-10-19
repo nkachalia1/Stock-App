@@ -8,8 +8,11 @@ class Example {
     }
 
     handleClick() {
-
         this.ele.children[0].innerText = "ouch";
+    }
+
+    newMethod() {
+
     }
 }
 
