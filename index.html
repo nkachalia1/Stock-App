@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <html lang="en">
 
   <head>
@@ -6,39 +8,19 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="./dist/main.css" />
     <script src="./dist/main.js"></script>
-    <title>Project Name</title>
+    <title>Stock App</title>
   </head>
 
   <body>
     <div id="main">Hello from index.html. If you see this, problem.</div>
 
-    <div class="list-container">
+    <div id="data-container">
       Enter stock ticker here:
       <br/>
       <form>
-        <input type="text" class="favorite-input"/>
-        <input type="submit" class="favorite-submit" value="Submit"/>
+        <input type="text" class="ticker-input"/>
+        <input type="submit" class="ticker-submit" value="Submit"/>
       </form>
-
-    <h1>Fetch Example</h1>
-    <div id="data-container"></div>
-
-    <script>
-        // Using fetch in an inline script
-        fetch('https://api.stockdata.org/v1/data/quote?symbols=AAPL&api_token=X52Nf4JHwEFtnmWs4BaNWYfUk9WYvVBHqBe6dPG9')
-            .then(response => response.json())
-            .then(data => {
-                // Do something with the retrieved data
-                document.getElementById('data-container').textContent = JSON.stringify(data);
-                // document.getElementById('data-container').textContent = data.day_high;
-                // const dayHighAAPL = data['day_high'];
-                // Log the day_high values to the console
-                // console.log('AAPL Day High:');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    </script>
 
   </body>
 
