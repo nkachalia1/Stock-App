@@ -1,6 +1,20 @@
-$color: purple;
+#tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 5px;
+    pointer-events: none;
+    opacity: 0; /* Initially hide the tooltip */
+    transition: opacity 0.3s; /* Add a smooth transition effect */
+}
 
-#main > h1 {
-    border: 4px solid $color;
-    padding: 20px;
+
+.legend-item {
+    cursor: pointer;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }

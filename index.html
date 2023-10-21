@@ -3,6 +3,8 @@
 <html lang="en">
 
   <head>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -12,15 +14,28 @@
   </head>
 
   <body>
-    <div id="main">Hello from index.html. If you see this, problem.</div>
+    <div id="tooltip"></div>
 
-    <div id="data-container">
-      Enter stock ticker here:
-      <br/>
-      <form>
-        <input type="text" class="ticker-input"/>
-        <input type="submit" class="ticker-submit" value="Submit"/>
-      </form>
+    <div id="data-container"></div>
+    Enter stock ticker here:
+    <br />
+    <input type="text" class="ticker-input" />
+    <br />
+    Enter start date:
+    <br />
+    <form>
+      <input type="date" class="date-input" />
+      <input type="submit" class="ticker-submit" value="Submit" />
+    </form>
+
+      <div id="chart-container"></div>
+
+      <div id="max-price"></div>
+      <div id="min-price"></div>
+      <div id="buy-sell-points"></div>
+      <div id="profit"></div>
+      <div id="legend-container"></div>
+
 
   </body>
 
