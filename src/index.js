@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let sell = i;
 
             // Add buy and sell points to the result array
-            buySellPoints.push([buy, sell]);
+            buySellPoints.push({ buy: { day: buy, price: prices[buy] }, sell: { day: sell, price: prices[sell] } });
         }
 
         return buySellPoints;
@@ -33,12 +33,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     };
 
+    const calculateInvestedProfit = (investmentAmount, buySellPoints) => {
+        let grossRevenueFromInvestment = investmentAmount;
+        let numShares = 0;
+        let netProfit;
+        for (let a=0; a<buySellPoints.length; a++) {
+            numShares = grossRevenueFromInvestment/buySellPoints[a].buy.price;
+            grossRevenueFromInvestment = numShares*buySellPoints[a].sell.price;
+        }
+
+        netProfit = grossRevenueFromInvestment - investmentAmount;
+        return netProfit;
+    }
+
     const handletickerSubmit = (e) => {
         e.preventDefault();
         const tickerInput = document.querySelector(".ticker-input");
         const dateInput = document.querySelector(".date-input");
+        const investmentInput = document.querySelector(".investment-input");
         let stockTicker = tickerInput.value;
         let selectedDate = dateInput.value;
+        let investmentAmount = parseFloat(investmentInput.value);
         const currentDate = new Date().toISOString().split('T')[0];
 
         fetch(`http://api.marketstack.com/v1/eod?access_key=f45d23e96f5b1cceed74bcf23257fdac&symbols=${stockTicker}&date_from=${selectedDate}&date_to=${currentDate}`)
@@ -87,70 +102,48 @@ document.addEventListener("DOMContentLoaded", () => {
                 .attr('class', 'line')
                 .attr('d', line);
 
+            // Add circles for data points
             svg.selectAll('.dot')
-                .data(info)
-                .enter().append('circle')
-                .attr('class', 'dot')
-                .attr('cx', d => x(d.date) + x.bandwidth() / 2) // Position the dot in the middle of the band
-                .attr('cy', d => y(d.price))
-                .attr('r', 5);
-
-            svg.selectAll('.dot')
-                .data(info)
-                .enter().append('circle')
-                .attr('class', 'dot')
-                .attr('cx', d => x(d.date) + x.bandwidth() / 2)
-                .attr('cy', d => y(d.price))
-                .attr('r', 5)
-                .on('mouseover', function(d) {
-                    // Show y-value on mouseover
-                    const tooltip = d3.select('#tooltip');
-                    tooltip.transition().duration(200).style('opacity', 0.9);
-                    tooltip.html(`Price: ${d.price}`)
-                        .style('left', (d3.event.pageX) + 'px') // position tooltip relative to the page
-                        .style('top', (d3.event.pageY - 28) + 'px'); // position tooltip slightly above the cursor
-                })
-                .on('mouseout', function() {
-                    // Hide tooltip on mouseout
-                    const tooltip = d3.select('#tooltip');
-                    tooltip.transition().duration(500).style('opacity', 0);
-                });
+            .data(info)
+            .enter().append('circle')
+            .attr('class', 'dot')
+            .attr('cx', d => x(d.date) + x.bandwidth() / 2)
+            .attr('cy', d => y(d.price))
+            .attr('r', 5)
+            .on('mouseover', function(event, d) {
+                // Access the data properties directly
+                const price = d.price;
+                // Show y-value on mouseover
+                const tooltip = d3.select('#tooltip');
+                tooltip.transition().duration(200).style('opacity', 0.9);
+                tooltip.html(`Price: $${price.toFixed(2)}`)
+                    .style('left', event.pageX + 'px')
+                    .style('top', event.pageY - 28 + 'px');
+            })
+            .on('mouseout', function() {
+                // Hide tooltip on mouseout
+                d3.select('#tooltip').transition().duration(500).style('opacity', 0);
+            });
 
             //Add circles for buy points
             svg.selectAll('.buy-circle')
                 .data(buySellPoints)
                 .enter().append('circle')
                 .attr('class', 'buy-circle')
-                .attr('cx', d => x(`Day ${d[0] + 1}`) + x.bandwidth() / 2) // Access the correct date from info array
-                .attr('cy', d => y(closingPrices[d[0]]))
+                .attr('cx', d => x(`Day ${d.buy.day + 1}`) + x.bandwidth() / 2) // Access the correct date from info array
+                .attr('cy', d => y(closingPrices[d.buy.day]))
                 .attr('r', 5)
                 .style('fill', 'green')
-                .on('mouseover', function() {
-                    // Show "Buy" tooltip on mouseover
-                    // ... (tooltip logic)
-                })
-                .on('mouseout', function() {
-                    // Hide tooltip on mouseout
-                    // ... (tooltip logic)
-                });
 
             //Add circles for sell points
             svg.selectAll('.sell-circle')
                 .data(buySellPoints)
                 .enter().append('circle')
                 .attr('class', 'sell-circle')
-                .attr('cx', d => x(`Day ${d[1] + 1}`) + x.bandwidth() / 2) // Access the correct date from info array
-                .attr('cy', d => y(closingPrices[d[1]]))
+                .attr('cx', d => x(`Day ${d.sell.day + 1}`) + x.bandwidth() / 2) // Access the correct date from info array
+                .attr('cy', d => y(closingPrices[d.sell.day]))
                 .attr('r', 5)
                 .style('fill', 'red')
-                .on('mouseover', function() {
-                    // Show "Sell" tooltip on mouseover
-                    // ... (tooltip logic)
-                })
-                .on('mouseout', function() {
-                    // Hide tooltip on mouseout
-                    // ... (tooltip logic)
-                });
 
             //Display max and min prices in the browser
             const maxPriceElement = document.getElementById('max-price');
@@ -160,29 +153,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
             //Display multiple buy and sell points in the browser
             const buySellPointsElement = document.getElementById('buy-sell-points');
-            buySellPointsElement.textContent = "Buy and Sell Points:\n";
-            buySellPoints.forEach(([buy, sell]) => {
-            buySellPointsElement.textContent += `Buy at Day ${buy + 1} and sell at Day ${sell + 1}\n`;
+            buySellPointsElement.textContent = `Buy and Sell Points:\n`;
+            buySellPoints.forEach(({ buy, sell }) => {
+                buySellPointsElement.textContent += `Buy at Day ${buy.day + 1} ($${buy.price.toFixed(2)})\nSell at Day ${sell.day + 1} ($${sell.price.toFixed(2)})\n\n`;
             });
 
-            //Calculate and display total profit
+
+            //Calculate and display net profit
             const profitElement = document.getElementById('profit');
-            profitElement.textContent = "Total Profit: ";
-            let totalProfit = 0;
-            buySellPoints.forEach(([buy, sell]) => {
-                const buyPrice = closingPrices[buy];
-                const sellPrice = closingPrices[sell];
-                const profit = sellPrice - buyPrice;
-                totalProfit += profit;
-            });
-
-            // Append the new value
-            profitElement.textContent += `$${totalProfit.toFixed(2)}`;
+            profitElement.textContent = "Net Profit: ";
+            const netProfit = calculateInvestedProfit(investmentAmount, buySellPoints);
+            profitElement.textContent += `$${netProfit.toFixed(2)}`;
 
         })
+
         .catch(error => {
             console.error('Error:', error);
         });
+
     };
 
     const listSubmitButton = document.querySelector(".ticker-submit");

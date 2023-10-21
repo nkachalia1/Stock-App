@@ -14,17 +14,22 @@
   </head>
 
   <body>
-    <div id="tooltip"></div>
+    <div id="tooltip" class="tooltip" style="opacity: 0;"></div>
 
     <div id="data-container"></div>
-    Enter stock ticker here:
+    Enter stock ticker:
     <br />
     <input type="text" class="ticker-input" />
     <br />
     Enter start date:
     <br />
-    <form>
-      <input type="date" class="date-input" />
+    <input type="date" class="date-input" />
+    <br />
+    Enter dollar amount to invest:
+    <br />
+    <input type="number" class="investment-input" />
+    <br />
+
       <input type="submit" class="ticker-submit" value="Submit" />
     </form>
 

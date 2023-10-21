@@ -21,6 +21,10 @@
   border-radius: 5px;
 }
 
+#buy-sell-points {
+  white-space: pre-line;
+}
+
 #main {
   color: purple;
 }
