@@ -22,3 +22,77 @@
 #buy-sell-points {
     white-space: pre-line;
 }
+
+#chart-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+
+.dot {
+    fill: steelblue;
+}
+
+.buy-circle {
+    fill: green;
+}
+
+.sell-circle {
+    fill: red;
+}
+
+#max-price,
+#min-price,
+#buy-sell-points,
+#profit {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+body {
+  background-color: lightblue;
+}
+
+#button-container {
+    text-align: center; /* Center the buttons horizontally */
+}
+
+#button-container button {
+    margin: 10px; /* Add some margin between buttons for spacing */
+    padding: 10px 20px; /* Adjust padding for better button appearance */
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.input-label {
+    width: 200px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.ticker-input {
+    width: 120px;
+    margin: 0;
+    padding: 5px; /* Adjust the padding as needed to bring the input field closer to the label */
+}
+
+.date-input {
+    width: 120px;
+    margin: 0;
+    padding: 5px; /* Adjust the padding as needed to bring the input field closer to the label */
+}
+
+.investment-input {
+    width: 120px;
+    margin: 0;
+    padding: 5px; /* Adjust the padding as needed to bring the input field closer to the label */
+}

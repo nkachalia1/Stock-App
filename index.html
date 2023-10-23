@@ -16,21 +16,16 @@
   <body>
     <div id="tooltip" class="tooltip" style="opacity: 0;"></div>
 
-    <div id="data-container"></div>
-    Enter stock ticker:
-    <br />
-    <input type="text" class="ticker-input" />
-    <br />
-    Enter start date:
-    <br />
-    <input type="date" class="date-input" />
-    <br />
-    Enter dollar amount to invest:
-    <br />
-    <input type="number" class="investment-input" />
-    <br />
+    <div class="input-container">
+      <div class="input-label">Enter stock ticker:</div>
+      <input class="ticker-input" type="text" placeholder="Ticker Symbol">
+      <div class="input-label">Enter start date:</div>
+      <input class="date-input" type="date">
+      <div class="input-label">Enter investment amount:</div>
+      <input class="investment-input" type="number" placeholder="Amount (USD)">
+  </div>
 
-      <input type="submit" class="ticker-submit" value="Submit" />
+    <input type="submit" class="ticker-submit" value="Submit" />
     </form>
 
       <div id="chart-container"></div>
@@ -40,6 +35,15 @@
       <div id="buy-sell-points"></div>
       <div id="profit"></div>
       <div id="legend-container"></div>
+
+      <div id="button-container">
+        <button id="apple">Apple</button>
+        <button id="microsoft">Microsoft</button>
+        <button id="palantir">Palantir</button>
+        <button id="tesla">Tesla</button>
+    </div>
+
+      <script src="index.js"></script>
 
 
   </body>

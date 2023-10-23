@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+    let selectedDate;
+    let investmentAmount;
+    let currentDate;
 
     const findBuySellPoints = (prices) => {
         let n = prices.length;
@@ -30,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return buySellPoints;
 
-
     };
 
     const calculateInvestedProfit = (investmentAmount, buySellPoints) => {
@@ -46,16 +48,27 @@ document.addEventListener("DOMContentLoaded", () => {
         return netProfit;
     }
 
-    const handletickerSubmit = (e) => {
-        e.preventDefault();
-        const tickerInput = document.querySelector(".ticker-input");
-        const dateInput = document.querySelector(".date-input");
-        const investmentInput = document.querySelector(".investment-input");
-        let stockTicker = tickerInput.value;
-        let selectedDate = dateInput.value;
-        let investmentAmount = parseFloat(investmentInput.value);
-        const currentDate = new Date().toISOString().split('T')[0];
+    var appleStock = document.getElementById("apple");
+    appleStock.addEventListener("click", function() {
+        createGraph("AAPL", selectedDate, currentDate, investmentAmount);
+    });
 
+    var msftStock = document.getElementById("microsoft");
+    msftStock.addEventListener("click", function() {
+        createGraph("MSFT", selectedDate, currentDate, investmentAmount);
+    });
+
+    var pltrStock = document.getElementById("palantir");
+    pltrStock.addEventListener("click", function() {
+        createGraph("PLTR", selectedDate, currentDate, investmentAmount);
+    });
+
+    var tslaStock = document.getElementById("tesla");
+    tslaStock.addEventListener("click", function() {
+        createGraph("TSLA", selectedDate, currentDate, investmentAmount);
+    });
+
+    function createGraph(stockTicker, selectedDate, currentDate, investmentAmount) {
         fetch(`http://api.marketstack.com/v1/eod?access_key=f45d23e96f5b1cceed74bcf23257fdac&symbols=${stockTicker}&date_from=${selectedDate}&date_to=${currentDate}`)
         .then(response => response.json())
         .then(data => {
@@ -82,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const y = d3.scaleLinear().range([height, 0]);
 
             const info = closingPrices.map((price, index) => ({ date: `Day ${index + 1}`, price: price }));
-
             x.domain(info.map(d => d.date));
             y.domain([0, d3.max(info, d => d.price)]);
 
@@ -101,29 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 .datum(info)
                 .attr('class', 'line')
                 .attr('d', line);
-
-            // Add circles for data points
-            svg.selectAll('.dot')
-            .data(info)
-            .enter().append('circle')
-            .attr('class', 'dot')
-            .attr('cx', d => x(d.date) + x.bandwidth() / 2)
-            .attr('cy', d => y(d.price))
-            .attr('r', 5)
-            .on('mouseover', function(event, d) {
-                // Access the data properties directly
-                const price = d.price;
-                // Show y-value on mouseover
-                const tooltip = d3.select('#tooltip');
-                tooltip.transition().duration(200).style('opacity', 0.9);
-                tooltip.html(`Price: $${price.toFixed(2)}`)
-                    .style('left', event.pageX + 'px')
-                    .style('top', event.pageY - 28 + 'px');
-            })
-            .on('mouseout', function() {
-                // Hide tooltip on mouseout
-                d3.select('#tooltip').transition().duration(500).style('opacity', 0);
-            });
 
             //Add circles for buy points
             svg.selectAll('.buy-circle')
@@ -144,6 +133,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 .attr('cy', d => y(closingPrices[d.sell.day]))
                 .attr('r', 5)
                 .style('fill', 'red')
+
+            // Add circles for data points
+            svg.selectAll('.dot')
+            .data(info)
+            .enter().append('circle')
+            .attr('class', 'dot')
+            .attr('cx', d => x(d.date) + x.bandwidth() / 2)
+            .attr('cy', d => y(d.price))
+            .attr('r', 5)
+            .on('mouseover', function(d) {
+                const mousePrice = d.price;
+                const tooltip = d3.select('#tooltip');
+                tooltip.transition().duration(200).style('opacity', 0.9);
+                tooltip.html(`Price: $${mousePrice}`)
+                    .style('left', event.pageX + 'px')
+                    .style('top', event.pageY - 28 + 'px');
+            })
+            .on('mouseout', function() {
+                // Hide tooltip on mouseout
+                d3.select('#tooltip').transition().duration(500).style('opacity', 0);
+            });
 
             //Display max and min prices in the browser
             const maxPriceElement = document.getElementById('max-price');
@@ -170,7 +180,19 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => {
             console.error('Error:', error);
         });
+    }
 
+    const handletickerSubmit = (e) => {
+        e.preventDefault();
+        const tickerInput = document.querySelector(".ticker-input");
+        const dateInput = document.querySelector(".date-input");
+        const investmentInput = document.querySelector(".investment-input");
+        let stockTicker = tickerInput.value;
+        selectedDate = dateInput.value;
+        investmentAmount = parseFloat(investmentInput.value);
+        currentDate = new Date().toISOString().split('T')[0];
+
+        createGraph(stockTicker, selectedDate, currentDate, investmentAmount);
     };
 
     const listSubmitButton = document.querySelector(".ticker-submit");
