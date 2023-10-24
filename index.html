@@ -15,17 +15,20 @@
 
   <body>
     <div id="tooltip" class="tooltip" style="opacity: 0;"></div>
+    <h1>Welcome to the Stock Viewer</h1>
+    <link rel="stylesheet" href="example.css">
+    <div class="container">
+      <div class="input-container">
+          <div class="input-label">Ticker:</div>
+          <input class="ticker-input" type="text" placeholder="Ticker Symbol">
+          <div class="input-label">Start date:</div>
+          <input class="date-input" type="date">
+          <div class="input-label">Investment amount:</div>
+          <input class="investment-input" type="number" placeholder="Amount (USD)">
+      </div>
 
-    <div class="input-container">
-      <div class="input-label">Enter stock ticker:</div>
-      <input class="ticker-input" type="text" placeholder="Ticker Symbol">
-      <div class="input-label">Enter start date:</div>
-      <input class="date-input" type="date">
-      <div class="input-label">Enter investment amount:</div>
-      <input class="investment-input" type="number" placeholder="Amount (USD)">
+      <input type="submit" class="ticker-submit" value="Submit">
   </div>
-
-    <input type="submit" class="ticker-submit" value="Submit" />
     </form>
 
       <div id="chart-container"></div>
@@ -36,14 +39,15 @@
       <div id="profit"></div>
       <div id="legend-container"></div>
 
-      <div id="button-container">
-        <button id="apple">Apple</button>
-        <button id="microsoft">Microsoft</button>
-        <button id="palantir">Palantir</button>
-        <button id="tesla">Tesla</button>
+      <div class="button-container">
+        <button id="apple" class="hide">Apple</button>
+        <button id="microsoft" class="hide">Microsoft</button>
+        <button id="palantir" class="hide">Palantir</button>
+        <button id="tesla" class="hide">Tesla</button>
+        <script src="index.js"></script>
     </div>
 
-      <script src="index.js"></script>
+
 
 
   </body>

@@ -10,7 +10,6 @@
     transition: opacity 0.3s; /* Add a smooth transition effect */
 }
 
-
 .legend-item {
     cursor: pointer;
     padding: 5px;
@@ -26,6 +25,13 @@
 #chart-container {
     margin-top: 20px;
     text-align: center;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px; /* Add margin around the container for spacing */
 }
 
 .line {
@@ -58,6 +64,8 @@ body {
   background-color: lightblue;
 }
 
+
+
 #button-container {
     text-align: center; /* Center the buttons horizontally */
 }
@@ -70,11 +78,10 @@ body {
 .input-container {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 .input-label {
-    width: 200px;
+    width: 100px;
     text-align: right;
     margin-right: 10px;
 }
@@ -95,4 +102,33 @@ body {
     width: 120px;
     margin: 0;
     padding: 5px; /* Adjust the padding as needed to bring the input field closer to the label */
+}
+
+.hide {
+    display: none;
+}
+
+h1 {
+    font-family: 'Arial', sans-serif; /* Use a specific font family */
+    font-size: 36px; /* Set the font size */
+    color: #007BFF; /* Set the text color */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Add a text shadow for a stylish effect */
+    text-align: center; /* Center the text */
+    margin-top: 50px; /* Add some top margin for spacing */
+}
+
+.ticker-submit {
+    /* Add styles for the submit button */
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 20px; /* Add margin to the left to separate from input fields */
+}
+
+.ticker-submit:hover {
+    background-color: #0056b3; /* Change background color on hover */
 }
