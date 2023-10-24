@@ -137,13 +137,13 @@ document.addEventListener("DOMContentLoaded", () => {
             existingGraph.remove();
         }
 
-        fetch(`http://api.marketstack.com/v1/eod?access_key=f45d23e96f5b1cceed74bcf23257fdac&symbols=${stockTicker}&date_from=${selectedDate}&date_to=${currentDate}`)
+        fetch(`http://api.marketstack.com/v1/eod?access_key=a102fb3f246cfc748eabb0cbafd35e2b&symbols=${stockTicker}&date_from=${selectedDate}&date_to=${currentDate}`)
         .then(response => response.json())
         .then(data => {
             const closingPrices = data.data.map(day => day.close);
             const dates = data.data.map(date => date.date.slice(0,10));
             const maxPrice = Math.max(...closingPrices);
-            // const adjustedMaxPrice = maxPrice * 1.25; // Adjust the maximum price by 25%
+            const adjustedMaxPrice = maxPrice * 1.35;
             const minPrice = Math.min(...closingPrices);
 
             const margin = { top: 60, right: 20, bottom: 50, left: 50 };
@@ -162,13 +162,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const parseDate = d3.timeParse('%Y-%m-%d');
 
             const x = d3.scaleBand().range([0, width]).padding(0.1);
-            const y = d3.scaleLinear().range([height, 0]);
-            // const y = d3.scaleLinear().domain([0, adjustedMaxPrice]).nice().range([height, 0]);
+            const y = d3.scaleLinear().domain([0, adjustedMaxPrice]).nice().range([height, 0]);
+
+            const yPlot = d3.scaleLinear().domain([0, maxPrice]).range([height, 0]);
 
             // const info = closingPrices.map((price, index) => ({ date: `Day ${index + 1}`, price: price }));
-            const dates_prices = dates.map((date, index) => ({ date: date, price: closingPrices[index] }));
+            const dates_prices = dates.map((date, index) => ({ date: date, price: closingPrices[index] })).sort((a, b) => new Date(a.date) - new Date(b.date));
             x.domain(dates_prices.map(d => d.date));
-            y.domain([0, d3.max(dates_prices, d => d.price)]);
+            y.domain([0, adjustedMaxPrice]);
 
             svg.append('g')
             .call(d3.axisLeft(y));
@@ -236,12 +237,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const line = d3.line()
                 .x(d => x(d.date) + x.bandwidth() / 2) // Position the line in the middle of the band
-                .y(d => y(d.price));
+                .y(d => y(d.price))
+                .curve(d3.curveBasis); // Use curveMonotoneX for smooth interpolation
 
                 svg.append('path')
                 .datum(dates_prices)
                 .attr('class', 'line')
                 .attr('d', line)
+                .attr('stroke', 'steelblue') // Set line color
+                .attr('stroke-width', 3)      // Set line width
+                .attr('fill', 'none')
                 .attr('stroke-dasharray', function() {
                     const totalLength = this.getTotalLength();
                     return totalLength + " " + totalLength;
