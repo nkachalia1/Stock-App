@@ -7,6 +7,61 @@ document.addEventListener("DOMContentLoaded", () => {
         button.classList.add("hide"); // Initially hide all stock buttons
     });
 
+    createEmptyGraph();
+
+    function createEmptyGraph() {
+        const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+        const width = 600 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
+
+        const svg = d3.select('#chart-container')
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        // Define X and Y scales
+        const xScale = d3.scaleBand().range([0, width]).padding(0.1);
+        const yScale = d3.scaleLinear().range([height, 0]);
+
+        // Add X and Y axis elements
+        const xAxis = d3.axisBottom(xScale);
+        const yAxis = d3.axisLeft(yScale);
+
+        // Append X and Y axes to the graph
+        svg.append('g')
+            .attr('class', 'x-axis')
+            .attr('transform', 'translate(0,' + height + ')')
+            .call(xAxis);
+
+        svg.append('g')
+            .attr('class', 'y-axis')
+            .call(yAxis);
+
+        // Add labels for X and Y axes (if needed)
+        svg.append('text')
+            .attr('transform', 'translate(' + (width / 2) + ' ,' + (height + margin.top + 20) + ')')
+            .style('text-anchor', 'middle')
+            .text('Date');
+
+        svg.append('text')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 0 - margin.left)
+            .attr('x', 0 - (height / 2))
+            .attr('dy', '1em')
+            .style('text-anchor', 'middle')
+            .text('Price ($)');
+
+        const svgElements = document.querySelectorAll("svg");
+
+        // Iterate over each SVG element and set the height
+        svgElements.forEach(svgElement => {
+            svgElement.style.height = "500px";
+        });
+    }
+
+
     const findBuySellPoints = (prices) => {
         let n = prices.length;
         let buySellPoints = [];
@@ -74,6 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function createGraph(stockTicker, selectedDate, currentDate, investmentAmount) {
         const existingGraph = document.querySelector('#chart-container svg:nth-child(2)');
+        const svg = d3.select('#chart-container svg');
+        svg.selectAll('*').remove();
         if (existingGraph) {
             existingGraph.remove();
         }
@@ -91,13 +148,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const height = 400 - margin.top - margin.bottom;
             const buySellPoints = findBuySellPoints(closingPrices);
 
-            //Build the line graph
             const svg = d3.select('#chart-container')
-                .append('svg')
-                .attr('width', width + margin.left + margin.right)
-                .attr('height', height + margin.top + margin.bottom)
-                .append('g')
-                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
 
             const parseDate = d3.timeParse('%Y-%m-%d');
 
@@ -120,8 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 .style("text-anchor", "middle")
                 .text("Price ($)");
 
-            // Inside your createGraph function
-            // Inside your createGraph function
             svg.append('g')
                 .attr('class', 'x-axis')
                 .attr('transform', 'translate(0,' + height + ')')
@@ -171,10 +226,41 @@ document.addEventListener("DOMContentLoaded", () => {
                 .x(d => x(d.date) + x.bandwidth() / 2) // Position the line in the middle of the band
                 .y(d => y(d.price));
 
-            svg.append('path')
+                svg.append('path')
                 .datum(dates_prices)
                 .attr('class', 'line')
-                .attr('d', line);
+                .attr('d', line)
+                .attr('stroke-dasharray', function() {
+                    const totalLength = this.getTotalLength();
+                    return totalLength + " " + totalLength;
+                })
+                .attr('stroke-dashoffset', function() {
+                    return this.getTotalLength();
+                })
+                .transition()
+                .duration(2000)  // Set transition duration in milliseconds
+                .attr('stroke-dashoffset', 0);
+
+                const bisect = d3.bisector(d => d.date).left; // Create a bisector to find the closest data point
+
+                svg.select('.line')
+                .on('mousemove', function (event) {
+                    const [mouseX, mouseY] = d3.pointer(event);
+                    const index = bisect(dates_prices, mouseX - margin.left, 1);
+                    const closestDataPoint = dates_prices[index];
+
+                    const tooltip = d3.select('#tooltip');
+                    const offsetX = 400;
+                    const offsetY = 140;
+
+                    tooltip.style('left', mouseX + offsetX + 'px')
+                        .style('top', mouseY + offsetY + 'px')
+                        .style('opacity', 1)
+                        .html(`Price: $${closestDataPoint.price.toFixed(2)}`);
+                })
+                .on('mouseout', function () {
+                    d3.select('#tooltip').style('opacity', 0);
+                });
 
             //Add circles for buy points
             // svg.selectAll('.buy-circle')
@@ -197,27 +283,39 @@ document.addEventListener("DOMContentLoaded", () => {
             //     .style('fill', 'red')
 
             // Add circles for data points
-            svg.selectAll('.dot')
-            .data(dates_prices)
-            .enter().append('circle')
-            .attr('class', 'dot')
-            .attr('cx', d => x(d.date) + x.bandwidth() / 2)
-            .attr('cy', d => y(d.price))
-            .attr('r', 5)
-            .on('mouseover', function(d) {
-                const mousePrice = d.price;
-                const tooltip = d3.select('#tooltip');
-                tooltip.transition().duration(200).style('opacity', 0.9);
-                tooltip.html(`Price: $${mousePrice}`)
-                    .style('left', event.pageX + 'px')
-                    .style('top', event.pageY - 28 + 'px');
-            })
-            .on('mouseout', function() {
-                // Hide tooltip on mouseout
-                d3.select('#tooltip').transition().duration(500).style('opacity', 0);
-            });
+            // svg.selectAll('.dot')
+            // .data(dates_prices)
+            // .enter().append('circle')
+            // .attr('class', 'dot')
+            // .attr('cx', d => x(d.date) + x.bandwidth() / 2)
+            // .attr('cy', d => y(d.price))
+            // .attr('r', 0)  // Initial radius set to 0
+            // .transition()
+            // .delay(function(d, i) {
+            //     return i * 100;  // Add delay based on index to transition circles chronologically
+            // })
+            // .duration(500)  // Transition duration in milliseconds
+            // .attr('r', 5)  // Final radius set to 5;
+            // .on('mouseover', function(d) {
+            //     const mousePrice = d.price;
+            //     const tooltip = d3.select('#tooltip');
+            //     tooltip.transition().duration(200).style('opacity', 0.9);
+            //     tooltip.html(`Price: $${mousePrice}`)
+            //         .style('left', d3.event.pageX + 'px')  // Use d3.event.pageX instead of event.pageX
+            //         .style('top', d3.event.pageY - 28 + 'px');  // Use d3.event.pageY instead of event.pageY
+            // })
 
-            document.querySelectorAll("svg").style.height="500px";
+            // .on('mouseout', function() {
+            //     // Hide tooltip on mouseout
+            //     d3.select('#tooltip').transition().duration(500).style('opacity', 0);
+            // });
+
+            const svgElements = document.querySelectorAll("svg");
+
+            // Iterate over each SVG element and set the height
+            svgElements.forEach(svgElement => {
+                svgElement.style.height = "500px";
+            });
 
             //Display max and min prices in the browser
             const maxPriceElement = document.getElementById('max-price');

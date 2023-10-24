@@ -1,13 +1,9 @@
-#tooltip {
+.tooltip {
     position: absolute;
-    text-align: center;
+    background-color: white;
+    border: 1px solid black;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    border-radius: 5px;
     pointer-events: none;
-    opacity: 0; /* Initially hide the tooltip */
-    transition: opacity 0.3s; /* Add a smooth transition effect */
 }
 
 .legend-item {

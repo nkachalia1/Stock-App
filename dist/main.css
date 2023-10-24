@@ -1,16 +1,12 @@
 /*!*************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/sass-loader/dist/cjs.js!./src/index.scss ***!
   \*************************************************************************************************************************************/
-#tooltip {
+.tooltip {
   position: absolute;
-  text-align: center;
+  background-color: white;
+  border: 1px solid black;
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  border-radius: 5px;
   pointer-events: none;
-  opacity: 0; /* Initially hide the tooltip */
-  transition: opacity 0.3s; /* Add a smooth transition effect */
 }
 
 .legend-item {
