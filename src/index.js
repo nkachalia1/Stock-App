@@ -64,6 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // }
 
 
+
+
     const findBuySellPoints = (prices) => {
         let n = prices.length;
         let buySellPoints = [];
@@ -129,13 +131,22 @@ document.addEventListener("DOMContentLoaded", () => {
         createGraph("TSLA", selectedDate, currentDate, investmentAmount);
     });
 
-    function createGraph(stockTicker, selectedDate, currentDate, investmentAmount) {
-        const existingGraph = document.querySelector('#chart-container svg:nth-child(2)');
-        const svg = d3.select('#chart-container svg');
-        svg.selectAll('*').remove();
+    function removeExistingGraph() {
+        const existingGraph = document.querySelector('#chart-container svg');
         if (existingGraph) {
             existingGraph.remove();
         }
+    }
+
+    function createGraph(stockTicker, selectedDate, currentDate, investmentAmount) {
+        // const existingGraph = document.querySelector('#chart-container svg:nth-child(2)');
+        // const svg = d3.select('#chart-container svg');
+        // svg.selectAll('*').remove();
+        // if (existingGraph) {
+        //     existingGraph.remove();
+        // }
+
+        removeExistingGraph();
 
         fetch(`http://api.marketstack.com/v1/eod?access_key=a102fb3f246cfc748eabb0cbafd35e2b&symbols=${stockTicker}&date_from=${selectedDate}&date_to=${currentDate}`)
         .then(response => response.json())
