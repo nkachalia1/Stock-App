@@ -298,3 +298,24 @@ body {
     font-size: 14px;
     margin-bottom: 10px;
 }
+
+body {
+    position: relative;
+}
+
+.social-icons {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+.social-icons a {
+    margin-left: 10px;
+    font-size: 24px;
+    color: #007BFF;
+    transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: #0056b3;
+}
