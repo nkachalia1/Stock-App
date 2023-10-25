@@ -9,6 +9,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     createGraph("GOOGL", "2023-01-01", currentDate, 5000);
 
+    var modal = document.getElementById("myModal");
+    var btn = document.getElementById("openModalBtn");
+    var closeBtn = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    closeBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
     // createEmptyGraph();
 
     // function createEmptyGraph() {
@@ -245,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .attr('text-anchor', 'middle')
                 .style('font-size', '18px')
                 .style('font-weight', 'bold')
-                .text(stockTicker);
+                .text(stockTicker.toUpperCase());
 
             const line = d3.line()
                 .x(d => x(d.date) + x.bandwidth() / 2) // Position the line in the middle of the band
