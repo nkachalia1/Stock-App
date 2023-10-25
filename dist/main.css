@@ -23,7 +23,7 @@
 
 #chart-container {
   margin: auto;
-  text-align: center;
+  text-align: left;
 }
 
 .container {
@@ -132,6 +132,11 @@ h1 {
 
 .bar {
   fill: steelblue;
+}
+
+#bar-plot {
+  margin: auto;
+  text-align: right;
 }
 
 #main {

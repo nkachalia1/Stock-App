@@ -371,31 +371,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
             // Create a new SVG group for the bar plot
             const barPlot = svg.append('g').attr('class', 'bar-plot');
 
             // Calculate gross revenue for each buy-sell pair
-            const grossRevenues = [];
-            let grossRevenueFromInvestment = investmentAmount;
+            // const grossRevenues = [];
+            // let grossRevenueFromInvestment = investmentAmount;
+            let currentProfit = 0;
+            let profitArray = [];
             for (let i = 0; i < buySellPoints.length; i++) {
-                grossRevenueFromInvestment = (grossRevenueFromInvestment / buySellPoints[i].buy.price) * buySellPoints[i].sell.price;
-                grossRevenues.push(grossRevenueFromInvestment);
+                // grossRevenueFromInvestment = (grossRevenueFromInvestment / buySellPoints[i].buy.price) * buySellPoints[i].sell.price;
+                // grossRevenues.push(grossRevenueFromInvestment);
+                currentProfit += buySellPoints[i].sell.price - buySellPoints[i].buy.price;
+                profitArray.push(currentProfit);
             }
 
+            const formattedDates = buySellPoints.map(point => {
+                const buyDate = dates[point.buy.day];
+                const sellDate = dates[point.sell.day];
+                return `Buy: ${buyDate}, Sell: ${sellDate}`;
+            });
+
+            console.log(formattedDates);
+
             // Define X and Y scales for the bar plot
-            const xBarScale = d3.scaleBand().domain(d3.range(grossRevenues.length)).range([0, width]).padding(0.1);
-            const yBarScale = d3.scaleLinear().domain([0, d3.max(grossRevenues)]).nice().range([height, 0]);
+            const xBarScale = d3.scaleBand().domain(d3.range(profitArray.length)).range([0, width]).padding(0.1);
+            const yBarScale = d3.scaleLinear().domain([0, d3.max(profitArray)]).nice().range([height, 0]);
 
             // Add bars to the bar plot
             barPlot.selectAll('.bar')
-                .data(grossRevenues)
-                .enter().append('rect')
-                .attr('class', 'bar')
-                .attr('x', (d, i) => xBarScale(i))
-                .attr('y', d => yBarScale(d))
-                .attr('width', xBarScale.bandwidth())
-                .attr('height', d => height - yBarScale(d))
-                .attr('fill', 'steelblue');
+            .data(profitArray)
+            .enter().append('rect')
+            .attr('class', 'bar')
+            .attr('x', (d, i) => xBarScale(i))
+            .attr('y', d => yBarScale(d))
+            .attr('width', xBarScale.bandwidth())
+            .attr('height', d => height - yBarScale(d))
+            .attr('fill', 'steelblue')
+            .attr('data-index', (d, i) => i)
+            .on('mouseover', function() {
+                const index = d3.select(this).attr('data-index');
+                const tooltip = d3.select('#tooltip');
+                tooltip.transition().duration(200).style('opacity', 0.9);
+                tooltip.html(`Trade Dates: ${formattedDates[index]}`)
+                    .style('left', d3.event.pageX + 'px')
+                    .style('top', d3.event.pageY - 28 + 'px');
+            })
+            .on('mouseout', function() {
+                d3.select('#tooltip').transition().duration(500).style('opacity', 0);
+            });
 
             // Add labels for X and Y axes of the bar plot
             barPlot.append('g')
@@ -411,12 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .attr("x", 0 - (height / 2))
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("Gross Revenue");
-
-
-
-
-
+                .text("Net accumulating profit ($)");
 
 
 
