@@ -95,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         return buySellPoints;
-
     };
 
     const calculateInvestedProfit = (investmentAmount, buySellPoints) => {
@@ -385,19 +384,39 @@ document.addEventListener("DOMContentLoaded", () => {
                 // grossRevenues.push(grossRevenueFromInvestment);
                 currentProfit += buySellPoints[i].sell.price - buySellPoints[i].buy.price;
                 profitArray.push(currentProfit);
+
             }
 
-            const formattedDates = buySellPoints.map(point => {
-                const buyDate = dates[point.buy.day];
-                const sellDate = dates[point.sell.day];
-                return `Buy: ${buyDate}, Sell: ${sellDate}`;
-            });
+            // const formattedDates = {
 
-            console.log(formattedDates);
+            //     for (let i=0; i<buySellPoints.length; i++) {
+            //         const buyDate = dates[buySellPoints.buy.day[i]-1];
+            //         const sellDate = dates[buySellPoints.sell.day[i]-1];
+            //         return `Buy: ${buyDate}, Sell: ${sellDate}`;
+
+            //     }
+                // const buyDate = dates[point.buy.day];
+                // const sellDate = dates[point.sell.day];
+                // return `Buy: ${buyDate}, Sell: ${sellDate}`;
+
+                // dates = buySellPoints.buy.day[i], buySellPoints.sell.day[i]
+
+            // };
+
+            const formattedDates = [];
+
+            for (let i = 0; i < buySellPoints.length; i++) {
+                const buyDate = dates_prices[buySellPoints[i].buy.day - 1].date;
+                const sellDate = dates_prices[buySellPoints[i].sell.day - 1].date;
+                formattedDates.push(`Buy: ${buyDate}, Sell: ${sellDate}`);
+            }
 
             // Define X and Y scales for the bar plot
             const xBarScale = d3.scaleBand().domain(d3.range(profitArray.length)).range([0, width]).padding(0.1);
             const yBarScale = d3.scaleLinear().domain([0, d3.max(profitArray)]).nice().range([height, 0]);
+
+
+            console.log(profitArray);
 
             // Add bars to the bar plot
             barPlot.selectAll('.bar')
@@ -410,13 +429,13 @@ document.addEventListener("DOMContentLoaded", () => {
             .attr('height', d => height - yBarScale(d))
             .attr('fill', 'steelblue')
             .attr('data-index', (d, i) => i)
-            .on('mouseover', function() {
+            .on('mouseover', function(event) {
                 const index = d3.select(this).attr('data-index');
                 const tooltip = d3.select('#tooltip');
                 tooltip.transition().duration(200).style('opacity', 0.9);
                 tooltip.html(`Trade Dates: ${formattedDates[index]}`)
-                    .style('left', d3.event.pageX + 'px')
-                    .style('top', d3.event.pageY - 28 + 'px');
+                    .style('left', event.pageX + 'px')
+                    .style('top', event.pageY - 28 + 'px');
             })
             .on('mouseout', function() {
                 d3.select('#tooltip').transition().duration(500).style('opacity', 0);
@@ -426,9 +445,9 @@ document.addEventListener("DOMContentLoaded", () => {
             barPlot.append('g')
                 .attr('class', 'x-axis')
                 .attr('transform', 'translate(0,' + height + ')')
-                .call(d3.axisBottom(xBarScale)
-                    .tickFormat((d, i) => `Trade ${i + 1}`)
-                );
+                // .call(d3.axisBottom(xBarScale)
+                //     .tickFormat((d, i) => `Trade ${i + 1}`)
+                // );
 
             barPlot.append("text")
                 .attr("transform", "rotate(-90)")
