@@ -146,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // }
 
         removeExistingGraph();
+        removeExistingGraph();
 
         fetch(`http://api.marketstack.com/v1/eod?access_key=a102fb3f246cfc748eabb0cbafd35e2b&symbols=${stockTicker}&date_from=${selectedDate}&date_to=${currentDate}`)
         .then(response => response.json())
@@ -372,7 +373,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             // Create a new SVG group for the bar plot
-            const barPlot = svg.append('g').attr('class', 'bar-plot');
+            // const barPlot = svg.append('g').attr('class', 'bar-plot');
+
+            const barPlot = d3.select('#chart-container')
+            .append('svg');
+
+            // .append('g').attr('class', 'bar-plot');
 
             // Calculate gross revenue for each buy-sell pair
             // const grossRevenues = [];
@@ -413,10 +419,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Define X and Y scales for the bar plot
             const xBarScale = d3.scaleBand().domain(d3.range(profitArray.length)).range([0, width]).padding(0.1);
-            const yBarScale = d3.scaleLinear().domain([0, d3.max(profitArray)]).nice().range([height, 0]);
+            // const yBarScale = d3.scaleLinear().domain([0, d3.max(profitArray)]).nice().range([height, 0]);
+
+            const yBarScale = d3.scaleLinear()
+            .domain([0, d3.max(profitArray)]) // Update this domain based on your data
+            .nice()
+            .range([height, 0]);
 
 
-            console.log(profitArray);
 
             // Add bars to the bar plot
             barPlot.selectAll('.bar')
@@ -442,20 +452,40 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             // Add labels for X and Y axes of the bar plot
+            const xAxis = d3.axisBottom(xBarScale);
+            // const yAxis = d3.axisLeft(yBarScale);
+            const yAxis = d3.axisLeft(yBarScale)
+            .tickFormat(d3.format('$,'));
+
+
             barPlot.append('g')
-                .attr('class', 'x-axis')
-                .attr('transform', 'translate(0,' + height + ')')
+            .attr('class', 'x-axis')
+            .attr('transform', 'translate(0,' + height + ')')
+            .call(xAxis);
+
+            barPlot.append('g')
+            .attr('class', 'y-axis')
+            .call(yAxis);
+
                 // .call(d3.axisBottom(xBarScale)
                 //     .tickFormat((d, i) => `Trade ${i + 1}`)
                 // );
 
             barPlot.append("text")
+                .attr('class', 'y-axis-label')
                 .attr("transform", "rotate(-90)")
                 .attr("y", 0 - margin.left)
                 .attr("x", 0 - (height / 2))
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("Net accumulating profit ($)");
+                .text("Net accumulating profit ($)")
+                .attr('class', 'chart-title')
+                .attr('x', width / 2)
+                .attr('y', 0 - margin.top / 2)
+                .attr('text-anchor', 'middle')
+                .style('font-size', '18px')
+                .text('Net accumulating profit ($)');
+
 
 
 

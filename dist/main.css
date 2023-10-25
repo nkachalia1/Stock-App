@@ -17,13 +17,16 @@
   border-radius: 5px;
 }
 
-#buy-sell-points {
+i #buy-sell-points {
   white-space: pre-line;
 }
 
 #chart-container {
-  margin: auto;
-  text-align: left;
+  display: flex;
+}
+
+svg {
+  margin: 20px; /* Adjust margin as needed */
 }
 
 .container {
