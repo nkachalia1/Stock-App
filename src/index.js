@@ -365,6 +365,61 @@ document.addEventListener("DOMContentLoaded", () => {
             const netProfit = calculateInvestedProfit(investmentAmount, buySellPoints);
             profitElement.textContent += `$${netProfit.toFixed(2)}`;
 
+
+
+
+
+
+
+            // Create a new SVG group for the bar plot
+            const barPlot = svg.append('g').attr('class', 'bar-plot');
+
+            // Calculate gross revenue for each buy-sell pair
+            const grossRevenues = [];
+            let grossRevenueFromInvestment = investmentAmount;
+            for (let i = 0; i < buySellPoints.length; i++) {
+                grossRevenueFromInvestment = (grossRevenueFromInvestment / buySellPoints[i].buy.price) * buySellPoints[i].sell.price;
+                grossRevenues.push(grossRevenueFromInvestment);
+            }
+
+            // Define X and Y scales for the bar plot
+            const xBarScale = d3.scaleBand().domain(d3.range(grossRevenues.length)).range([0, width]).padding(0.1);
+            const yBarScale = d3.scaleLinear().domain([0, d3.max(grossRevenues)]).nice().range([height, 0]);
+
+            // Add bars to the bar plot
+            barPlot.selectAll('.bar')
+                .data(grossRevenues)
+                .enter().append('rect')
+                .attr('class', 'bar')
+                .attr('x', (d, i) => xBarScale(i))
+                .attr('y', d => yBarScale(d))
+                .attr('width', xBarScale.bandwidth())
+                .attr('height', d => height - yBarScale(d))
+                .attr('fill', 'steelblue');
+
+            // Add labels for X and Y axes of the bar plot
+            barPlot.append('g')
+                .attr('class', 'x-axis')
+                .attr('transform', 'translate(0,' + height + ')')
+                .call(d3.axisBottom(xBarScale)
+                    .tickFormat((d, i) => `Trade ${i + 1}`)
+                );
+
+            barPlot.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left)
+                .attr("x", 0 - (height / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Gross Revenue");
+
+
+
+
+
+
+
+
         })
 
         .catch(error => {
