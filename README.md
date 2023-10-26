@@ -15,7 +15,7 @@ In addition, this project will include:
 
 <h1>Wireframe</h1>
 
-![Homepage](https://github.com/nkachalia1/JavaScript-Project-1/assets/26831378/e418c22d-7773-4281-96ad-858519349b2c)
+![Homepage](https://wireframe.cc/pro/pp/0f2db6fe7693659)
 
 <h1>Technologies and APIs</h1>
 
