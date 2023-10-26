@@ -314,32 +314,37 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
 
 
-                // Create a transition for the circles after the line has been created
-                svg.selectAll('.buy-circle')
-                    .data(buySellPoints)
-                    .enter().append('circle')
-                    .attr('class', 'buy-circle')
-                    .attr('r', 0) // Start with radius 0 for initial hidden state
-                    .attr('cx', d => x(dates[d.buy.day]))
-                    .attr('cy', d => y(closingPrices[d.buy.day]))
-                    .style('fill', 'green')
-                    .transition() // Apply transition to circles
-                    .delay(2000) // Delay the start of the transition by 2000 milliseconds (or adjust as needed)
-                    .duration(1000) // Transition duration 1000 milliseconds (or adjust as needed)
-                    .attr('r', 5); // End with radius 5 for visible state
+            let reversed_buySellPoints = buySellPoints.reverse();
+            // Create a transition for the buy circles after the line has been created
+// Create a transition for the buy circles after the line has been created
+svg.selectAll('.buy-circle')
+    .data(reversed_buySellPoints)
+    .enter().append('circle')
+    .attr('class', 'buy-circle')
+    .attr('r', 0) // Start with radius 0 for initial hidden state
+    .attr('cx', d => x(dates[d.buy.day]))
+    .attr('cy', d => y(closingPrices[d.buy.day]))
+    .style('fill', 'green')
+    .transition() // Apply transition to circles
+    .delay((d, i) => i * 70) // Delay each circle by 500 milliseconds times its index
+    .duration(1000) // Transition duration 1000 milliseconds (or adjust as needed)
+    .attr('r', 2); // End with radius 5 for visible state
 
-                svg.selectAll('.sell-circle')
-                    .data(buySellPoints)
-                    .enter().append('circle')
-                    .attr('class', 'sell-circle')
-                    .attr('r', 0) // Start with radius 0 for initial hidden state
-                    .attr('cx', d => x(dates[d.sell.day]))
-                    .attr('cy', d => y(closingPrices[d.sell.day]))
-                    .style('fill', 'red')
-                    .transition() // Apply transition to circles
-                    .delay(2000) // Delay the start of the transition by 2000 milliseconds (or adjust as needed)
-                    .duration(1000) // Transition duration 1000 milliseconds (or adjust as needed)
-                    .attr('r', 5); // End with radius 5 for visible state
+// Create a transition for the sell circles after the buy circles transition is completed
+svg.selectAll('.sell-circle')
+    .data(reversed_buySellPoints)
+    .enter().append('circle')
+    .attr('class', 'sell-circle')
+    .attr('r', 0) // Start with radius 0 for initial hidden state
+    .attr('cx', d => x(dates[d.sell.day]))
+    .attr('cy', d => y(closingPrices[d.sell.day]))
+    .style('fill', 'red')
+    .transition() // Apply transition to circles
+    .delay((d, i) => i * 70) // Delay each circle by 500 milliseconds times its index
+    .duration(1000) // Transition duration 1000 milliseconds (or adjust as needed)
+    .attr('r', 2); // End with radius 5 for visible state
+
+
 
 
 
