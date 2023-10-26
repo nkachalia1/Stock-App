@@ -1,4 +1,4 @@
-<h1>Stock Viewer</h1>
+<!-- <h1>Stock Viewer</h1>
 
 URL: https://nkachalia1.github.io/Stock-App/
 
@@ -72,6 +72,91 @@ The hover technique was implemented with mousover funcionality
 ```
 
 Features in Development
+
+Highlight the time window in the line chart that corresponds to the dates in the bar plot
+
+Analyze stock news and combine this with the current data to predict future stock price
+ -->
+
+
+
+# Stock Viewer
+
+**Website:** [Stock Viewer App](https://nkachalia1.github.io/Stock-App/)
+
+## Description
+
+Welcome to Stock Viewer, an interactive tool designed to visualize historical stock prices and maximize returns on investments.
+
+## Instructions
+
+1. **Enter Stock Ticker:** Provide the stock ticker symbol (e.g., 'SBUX' for Starbucks).
+2. **Select Date:** Choose a specific date in the past for analysis.
+3. **Investment Amount:** Enter the amount you wish to invest.
+4. **Click Submit:** Visualize the data and make informed investment decisions.
+
+## Features
+
+- **Line Graph:** Displays historical stock prices. Green circles indicate optimal buying times, and the nearest trailing red circle indicates the best time to sell.
+- **Bar Chart:** Represents the best days to buy and sell for maximizing profits.
+
+## Usage
+
+### Home Page
+![Stock Viewer Home](image-3.png)
+
+### Submitted Information
+![Stock Viewer Submitted](image-4.png)
+
+### Hover Over Graphs
+![Stock Viewer Hover](image-5.png)
+
+## Technical Details
+
+Stock Viewer is built using:
+
+- **Languages:** JavaScript, HTML, CSS
+- **Visualization:** D3.js
+- **Tools:** Webpack for bundling, npm for dependency management
+- **APIs:** AlphaVantage API and MarketStack API for fetching stock data
+
+### Feature Implementation
+
+The line graph and bar plot were created using d3
+
+```
+const margin = { top: 60, right: 20, bottom: 50, left: 50 };
+const width = 600 - margin.left - margin.right;
+const height = 400 - margin.top - margin.bottom;
+const buySellPoints = findBuySellPoints(closingPrices);
+
+const svg = d3.select('#chart-container')
+    .append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+const x = d3.scaleBand().range([0, width]).padding(0.1);
+const y = d3.scaleLinear().domain([0, adjustedMaxPrice]).nice().range([height, 0]);
+```
+
+The hover technique was implemented with mousover funcionality
+```
+// Mouseover functionality
+.on('mouseover', function(event) {
+    const index = d3.select(this).attr('data-index');
+    const tooltip = d3.select('#tooltip');
+    tooltip.transition().duration(200).style('opacity', 0.8);
+    tooltip.html(`Trade Dates: ${formattedDates[index]}`)
+        .style('left', event.pageX + 'px')
+        .style('top', event.pageY - 28 + 'px');
+})
+.on('mouseout', function() {
+    d3.select('#tooltip').transition().duration(500).style('opacity', 0);
+});
+```
+## Features in Development
 
 Highlight the time window in the line chart that corresponds to the dates in the bar plot
 
