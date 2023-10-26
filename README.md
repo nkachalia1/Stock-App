@@ -98,18 +98,18 @@ Welcome to Stock Viewer, an interactive tool designed to visualize historical st
 ## Features
 
 - **Line Graph:** Displays historical stock prices. Green circles indicate optimal buying times, and the nearest trailing red circle indicates the best time to sell.
-- **Bar Chart:** Represents the best days to buy and sell for maximizing profits.
+- **Bar Chart:** Represents the accumulating net profit based on the investment amount and optimal buy/sell dates.
 
 ## Usage
 
 ### Home Page
-![Stock Viewer Home](image-3.png)
+![Alt text](image-6.png)
 
 ### Submitted Information
-![Stock Viewer Submitted](image-4.png)
+![Alt text](image-7.png)
 
 ### Hover Over Graphs
-![Stock Viewer Hover](image-5.png)
+![Alt text](image-8.png)
 
 ## Technical Details
 
@@ -117,7 +117,7 @@ Stock Viewer is built using:
 
 - **Languages:** JavaScript, HTML, CSS
 - **Visualization:** D3.js
-- **Tools:** Webpack for bundling, npm for dependency management
+- **Tools:** Webpack for bundling and npm for dependency management
 - **APIs:** AlphaVantage API and MarketStack API for fetching stock data
 
 ### Feature Implementation
