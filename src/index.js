@@ -167,6 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
         removeExistingGraph();
         removeExistingGraph();
 
+        // fetch(`https://api.stockdata.org/v1/data/eod?symbols=${stockTicker}&api_token=Bc9kdoAsBS9RinZk1vqXCzh5owpQenRGf4UrSJl6&date_from=${selectedDate}&date_to=${currentDate}`)
         fetch(`http://api.marketstack.com/v1/eod?access_key=a102fb3f246cfc748eabb0cbafd35e2b&symbols=${stockTicker}&date_from=${selectedDate}&date_to=${currentDate}`)
         .then(response => response.json())
         .then(data => {
@@ -288,26 +289,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 .duration(2000)  // Set transition duration in milliseconds
                 .attr('stroke-dashoffset', 0);
 
-                const bisect = d3.bisector(d => d.date).left; // Create a bisector to find the closest data point
+                const bisect = d3.bisector(d => d.date).left;
 
                 svg.select('.line')
-                .on('mousemove', function (event) {
-                    const [mouseX, mouseY] = d3.pointer(event);
-                    const index = bisect(dates_prices, mouseX - margin.left, 1);
-                    const closestDataPoint = dates_prices[index];
+                    .on('mousemove', function (event) {
+                        const [mouseX, mouseY] = d3.pointer(event);
+                        // Calculate the index of the closest band based on the mouse position
+                        const index = Math.floor((mouseX - margin.left) / x.bandwidth());
+                        // Ensure the index is within valid bounds
+                        const validIndex = Math.max(0, Math.min(index, dates_prices.length - 1));
+                        const closestDataPoint = dates_prices[validIndex];
 
-                    const tooltip = d3.select('#tooltip');
-                    const offsetX = 400;
-                    const offsetY = 140;
+                        const tooltip = d3.select('#tooltip');
+                        const offsetX = 400;
+                        const offsetY = 140;
 
-                    tooltip.style('left', mouseX + offsetX + 'px')
-                        .style('top', mouseY + offsetY + 'px')
-                        .style('opacity', 1)
-                        .html(`Price: $${closestDataPoint.price.toFixed(2)}`);
-                })
-                .on('mouseout', function () {
-                    d3.select('#tooltip').style('opacity', 0);
-                });
+                        tooltip.style('left', mouseX + offsetX + 'px')
+                            .style('top', mouseY + offsetY + 'px')
+                            .style('opacity', 1)
+                            .html(`Price: $${closestDataPoint.price.toFixed(2)}`);
+                    })
+                    .on('mouseout', function () {
+                        d3.select('#tooltip').style('opacity', 0);
+                    });
+
 
             //Add circles for buy points
             // svg.selectAll('.buy-circle')
@@ -433,9 +438,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const formattedDates = [];
 
             for (let i = 0; i < buySellPoints.length; i++) {
-                const buyDate = dates_prices[buySellPoints[i].buy.day - 1].date;
-                const sellDate = dates_prices[buySellPoints[i].sell.day - 1].date;
+                // const buyDate = dates_prices[buySellPoints[i].buy.day - 1].date;
+                const buyDate = dates_prices[buySellPoints[i].buy.day].date;
+                // const sellDate = dates_prices[buySellPoints[i].sell.day - 1].date;
+                const sellDate = dates_prices[buySellPoints[i].sell.day].date;
                 formattedDates.push(`Buy: ${buyDate}, Sell: ${sellDate}`);
+
             }
 
             // Define X and Y scales for the bar plot
@@ -547,14 +555,18 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .on('mouseout', function() {
                 d3.select('#tooltip').transition().duration(500).style('opacity', 0);
-            });
-
+            })
+            .transition() // Apply transition effect
+            .duration(1000) // Set the duration of the transition in milliseconds
+            .attr("y", function(d) { return bpy(d); })
+            .attr("height", function(d) { return height - bpy(d); });
 
             // Create x-axis
             bpsvg.append("g")
-            .attr("class", "x-axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(bpx).tickSize(0));
+                .attr("class", "x-axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(bpx).tickSize(0).tickFormat(""));
+
 
             // Create y-axis
             bpsvg.append("g")
@@ -577,6 +589,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .style('font-size', '18px')
             .style('font-weight', 'bold')
             .text("Net Accumulated Profit");
+
 
             // const bpElements = document.querySelectorAll("svg");
 
@@ -610,7 +623,6 @@ document.addEventListener("DOMContentLoaded", () => {
         currentDate = new Date().toISOString().split('T')[0];
 
         createGraph(stockTicker, selectedDate, currentDate, investmentAmount);
-
     };
 
     const listSubmitButton = document.querySelector(".ticker-submit");

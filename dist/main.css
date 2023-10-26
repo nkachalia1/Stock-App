@@ -317,6 +317,14 @@ body {
   color: #0056b3;
 }
 
+.x-hover-line,
+.y-hover-line {
+  stroke: #ccc;
+  stroke-dasharray: 3;
+  stroke-width: 1px;
+  pointer-events: none;
+}
+
 #main {
   color: purple;
 }

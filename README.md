@@ -1,3 +1,9 @@
+    Overview/Description of Project
+    Live Link to the hosted project
+    Screenshots/GIFs of project features
+    1-2 Code Snippets showing something you did
+
+
 <h1>Stock App</h1>
 
 The main objective of this project is to create a visualization of a stock's price over the course of one year.
