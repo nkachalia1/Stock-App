@@ -276,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .attr('class', 'line')
                 .attr('d', line)
                 .attr('stroke', 'steelblue') // Set line color
-                .attr('stroke-width', 3)      // Set line width
+                .attr('stroke-width', 5)      // Set line width
                 .attr('fill', 'none')
                 .attr('stroke-dasharray', function() {
                     const totalLength = this.getTotalLength();
@@ -301,17 +301,32 @@ document.addEventListener("DOMContentLoaded", () => {
                         const closestDataPoint = dates_prices[validIndex];
 
                         const tooltip = d3.select('#tooltip');
-                        const offsetX = 400;
-                        const offsetY = 140;
+                        const offsetX = 100;
+                        const offsetY = 150;
 
                         tooltip.style('left', mouseX + offsetX + 'px')
-                            .style('top', mouseY + offsetY + 'px')
-                            .style('opacity', 1)
-                            .html(`Price: $${closestDataPoint.price.toFixed(2)}`);
+                        .style('top', mouseY + offsetY + 'px')
+                        .style('opacity', .8)
+                        .style('box-shadow', '2px 2px 5px rgba(0, 0, 0, 0.5)')
+                        .html(`Price: $${closestDataPoint.price.toFixed(2)}`)
+
+                        tooltip.transition()
+                        .duration(200)
+                        .style('opacity', 1)
                     })
-                    .on('mouseout', function () {
-                        d3.select('#tooltip').style('opacity', 0);
-                    });
+
+                    .on('mouseout', function(event, d) {
+                        // Set a timeout to hide the tooltip after 1000 milliseconds (1 second)
+                        tooltip.node().timeout = setTimeout(() => {
+                            tooltip.transition()
+                                .duration(200)
+                                .style('opacity', 0); // Set final opacity after transition
+                        }, 1000);
+                    })
+
+                    // .on('mouseout', function () {
+                    //     d3.select('#tooltip').style('opacity', 0);
+                    // });
 
 
             let reversed_buySellPoints = buySellPoints.reverse();
@@ -324,7 +339,7 @@ svg.selectAll('.buy-circle')
     .attr('r', 0) // Start with radius 0 for initial hidden state
     .attr('cx', d => x(dates[d.buy.day]))
     .attr('cy', d => y(closingPrices[d.buy.day]))
-    .style('fill', 'green')
+    .style('fill', '#359d2f')
     .transition() // Apply transition to circles
     .delay((d, i) => i * 70) // Delay each circle by 500 milliseconds times its index
     .duration(1000) // Transition duration 1000 milliseconds (or adjust as needed)
@@ -386,22 +401,22 @@ svg.selectAll('.sell-circle')
             //Display max and min prices in the browser
             const maxPriceElement = document.getElementById('max-price');
             const minPriceElement = document.getElementById('min-price');
-            maxPriceElement.textContent = `Maximum Price: $${maxPrice}`;
-            minPriceElement.textContent = `Minimum Price: $${minPrice}`;
+            // maxPriceElement.textContent = `Maximum Price: $${maxPrice}`;
+            // minPriceElement.textContent = `Minimum Price: $${minPrice}`;
 
             //Display multiple buy and sell points in the browser
             const buySellPointsElement = document.getElementById('buy-sell-points');
-            buySellPointsElement.textContent = `Buy and Sell Points:\n`;
+            // buySellPointsElement.textContent = `Buy and Sell Points:\n`;
             buySellPoints.forEach(({ buy, sell }) => {
-                buySellPointsElement.textContent += `Buy at Day ${buy.day + 1} ($${buy.price.toFixed(2)})\nSell at Day ${sell.day + 1} ($${sell.price.toFixed(2)})\n\n`;
+                // buySellPointsElement.textContent += `Buy at Day ${buy.day + 1} ($${buy.price.toFixed(2)})\nSell at Day ${sell.day + 1} ($${sell.price.toFixed(2)})\n\n`;
             });
 
 
             //Calculate and display net profit
             const profitElement = document.getElementById('profit');
-            profitElement.textContent = "Net Profit: ";
+            // profitElement.textContent = "Net Profit: ";
             const netProfit = calculateInvestedProfit(investmentAmount, buySellPoints);
-            profitElement.textContent += `$${netProfit.toFixed(2)}`;
+            // profitElement.textContent += `$${netProfit.toFixed(2)}`;
 
 
 
@@ -533,6 +548,7 @@ svg.selectAll('.sell-circle')
             // Create an SVG element and append it to the body
             var bpsvg = d3.select("#chart-container")
             .append("svg")
+            .style("overflow", "visible")
             .attr("width", bpwidth + bpmargin.left + bpmargin.right)
             .attr("height", bpheight + bpmargin.top + bpmargin.bottom)
             .append("g")
@@ -563,7 +579,7 @@ svg.selectAll('.sell-circle')
             .on('mouseover', function(event) {
                 const index = d3.select(this).attr('data-index');
                 const tooltip = d3.select('#tooltip');
-                tooltip.transition().duration(200).style('opacity', 0.9);
+                tooltip.transition().duration(200).style('opacity', 0.8);
                 tooltip.html(`Trade Dates: ${formattedDates[index]}`)
                     .style('left', event.pageX + 'px')
                     .style('top', event.pageY - 28 + 'px');
@@ -593,9 +609,9 @@ svg.selectAll('.sell-circle')
             .call(d3.axisLeft(bpy))
             .append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0 - margin.left)
-            .attr("x", 0 - (height / 2))
-            .attr("dy", "1em")
+            .attr("y", 0 - bpmargin.left)
+            .attr("x", 0 - (bpheight / 2))
+            .attr("dy", ".5em")
             .style("text-anchor", "middle")
             .style("fill", "black")
             .style("font-size", "16px")

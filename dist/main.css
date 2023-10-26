@@ -7,6 +7,7 @@
   border: 1px solid black;
   padding: 10px;
   pointer-events: none;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5); /* Add a subtle box shadow */
 }
 
 .legend-item {
@@ -40,7 +41,7 @@ svg {
 .line {
   fill: none;
   stroke: steelblue;
-  stroke-width: 2px;
+  stroke-width: 4px;
 }
 
 .dot {
@@ -67,13 +68,25 @@ body {
   background-color: lightblue;
 }
 
-#button-container {
-  text-align: center; /* Center the buttons horizontally */
+.button-container {
+  display: flex;
+  justify-content: center; /* Center the buttons horizontally */
+  margin-top: -40px; /* Add margin at the top for spacing */
 }
 
-#button-container button {
-  margin: 10px; /* Add some margin between buttons for spacing */
-  padding: 10px 20px; /* Adjust padding for better button appearance */
+.button-container button {
+  margin: 40px; /* Add some margin between buttons for spacing */
+  padding: 15px 30px; /* Adjust padding for better button appearance */
+  background-color: #359d2f; /* Button background color */
+  color: white; /* Button text color */
+  border: none;
+  border-radius: 5px; /* Add rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+  background-color: #0056b3; /* Change background color on hover */
 }
 
 .input-container {
