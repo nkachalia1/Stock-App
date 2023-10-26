@@ -14,8 +14,7 @@ In addition, this project will include:
 2) README.md file
 
 <h1>Wireframe</h1>
-
-![Homepage](image.png)
+![Alt text](image.png)
 <h1>Technologies and APIs</h1>
 
 This project will implement:
