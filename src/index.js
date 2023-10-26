@@ -314,25 +314,34 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
 
 
-            //Add circles for buy points
-            // svg.selectAll('.buy-circle')
-            //     .data(buySellPoints)
-            //     .enter().append('circle')
-            //     .attr('class', 'buy-circle')
-            //     .attr('cx', d => x(`Day ${d.buy.day + 1}`) + x.bandwidth() / 2) // Access the correct date from info array
-            //     .attr('cy', d => y(closingPrices[d.buy.day]))
-            //     .attr('r', 5)
-            //     .style('fill', 'green')
+                // Create a transition for the circles after the line has been created
+                svg.selectAll('.buy-circle')
+                    .data(buySellPoints)
+                    .enter().append('circle')
+                    .attr('class', 'buy-circle')
+                    .attr('r', 0) // Start with radius 0 for initial hidden state
+                    .attr('cx', d => x(dates[d.buy.day]))
+                    .attr('cy', d => y(closingPrices[d.buy.day]))
+                    .style('fill', 'green')
+                    .transition() // Apply transition to circles
+                    .delay(2000) // Delay the start of the transition by 2000 milliseconds (or adjust as needed)
+                    .duration(1000) // Transition duration 1000 milliseconds (or adjust as needed)
+                    .attr('r', 5); // End with radius 5 for visible state
 
-            //Add circles for sell points
-            // svg.selectAll('.sell-circle')
-            //     .data(buySellPoints)
-            //     .enter().append('circle')
-            //     .attr('class', 'sell-circle')
-            //     .attr('cx', d => x(`Day ${d.sell.day + 1}`) + x.bandwidth() / 2) // Access the correct date from info array
-            //     .attr('cy', d => y(closingPrices[d.sell.day]))
-            //     .attr('r', 5)
-            //     .style('fill', 'red')
+                svg.selectAll('.sell-circle')
+                    .data(buySellPoints)
+                    .enter().append('circle')
+                    .attr('class', 'sell-circle')
+                    .attr('r', 0) // Start with radius 0 for initial hidden state
+                    .attr('cx', d => x(dates[d.sell.day]))
+                    .attr('cy', d => y(closingPrices[d.sell.day]))
+                    .style('fill', 'red')
+                    .transition() // Apply transition to circles
+                    .delay(2000) // Delay the start of the transition by 2000 milliseconds (or adjust as needed)
+                    .duration(1000) // Transition duration 1000 milliseconds (or adjust as needed)
+                    .attr('r', 5); // End with radius 5 for visible state
+
+
 
             // Add circles for data points
             // svg.selectAll('.dot')
@@ -540,6 +549,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .data(profitArray)
             .enter().append("rect")
             .attr("class", "bar")
+            .attr("class", "bar bar-transition")
             .attr("data-index", function(d, i) { return i; }) // Set data-index attribute
             .attr("x", function(d, i) { return bpx(i); })
             .attr("width", bpx.bandwidth())
@@ -555,11 +565,15 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .on('mouseout', function() {
                 d3.select('#tooltip').transition().duration(500).style('opacity', 0);
-            })
+            });
+
+            // Apply transition effect only to bars with the class 'bar-transition'
+            bpsvg.selectAll(".bar-transition")
             .transition() // Apply transition effect
             .duration(1000) // Set the duration of the transition in milliseconds
             .attr("y", function(d) { return bpy(d); })
             .attr("height", function(d) { return height - bpy(d); });
+
 
             // Create x-axis
             bpsvg.append("g")
