@@ -122,7 +122,7 @@ Stock Viewer is built using:
 
 ### Feature Implementation
 
-The line graph and bar plot were created using d3
+- **The line graph and bar plot were created using d3**
 
 ```
 const margin = { top: 60, right: 20, bottom: 50, left: 50 };
@@ -141,7 +141,7 @@ const x = d3.scaleBand().range([0, width]).padding(0.1);
 const y = d3.scaleLinear().domain([0, adjustedMaxPrice]).nice().range([height, 0]);
 ```
 
-The hover technique was implemented with mousover funcionality
+- **The hover technique was implemented with mousover funcionality**
 ```
 // Mouseover functionality
 .on('mouseover', function(event) {
@@ -158,6 +158,5 @@ The hover technique was implemented with mousover funcionality
 ```
 ## Features in Development
 
-Highlight the time window in the line chart that corresponds to the dates in the bar plot
-
-Analyze stock news and combine this with the current data to predict future stock price
+- **Highlight the line chart time window with the corresponding bar plot**
+- **Analyze stock news and combine this with the current data to predict future stock price**
