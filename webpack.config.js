@@ -7,9 +7,10 @@ const config = {
     path.resolve(__dirname, 'src', 'index.scss')
   ],
   output: {
-    path: path.join(__dirname, 'dist'), // bundled file in dist/
-    filename: '[name].js'
-  },
+  path: path.join(__dirname, 'dist'),
+  filename: '[name].js',
+  publicPath: '/Stock-App/',   // 👈 THIS IS THE FIX
+},
   module: {
     rules: [
       {
