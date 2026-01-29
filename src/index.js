@@ -27,63 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // createEmptyGraph();
-
-    // function createEmptyGraph() {
-    //     const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-    //     const width = 600 - margin.left - margin.right;
-    //     const height = 400 - margin.top - margin.bottom;
-
-    //     const svg = d3.select('#chart-container')
-    //         .append('svg')
-    //         .attr('width', width + margin.left + margin.right)
-    //         .attr('height', height + margin.top + margin.bottom)
-    //         .append('g')
-    //         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-    //     // Define X and Y scales
-    //     const xScale = d3.scaleBand().range([0, width]).padding(0.1);
-    //     const yScale = d3.scaleLinear().range([height, 0]);
-
-    //     // Add X and Y axis elements
-    //     const xAxis = d3.axisBottom(xScale);
-    //     const yAxis = d3.axisLeft(yScale);
-
-    //     // Append X and Y axes to the graph
-    //     svg.append('g')
-    //         .attr('class', 'x-axis')
-    //         .attr('transform', 'translate(0,' + height + ')')
-    //         .call(xAxis);
-
-    //     svg.append('g')
-    //         .attr('class', 'y-axis')
-    //         .call(yAxis);
-
-    //     // Add labels for X and Y axes (if needed)
-    //     svg.append('text')
-    //         .attr('transform', 'translate(' + (width / 2) + ' ,' + (height + margin.top + 20) + ')')
-    //         .style('text-anchor', 'middle')
-    //         .text('Date');
-
-    //     svg.append('text')
-    //         .attr('transform', 'rotate(-90)')
-    //         .attr('y', 0 - margin.left)
-    //         .attr('x', 0 - (height / 2))
-    //         .attr('dy', '1em')
-    //         .style('text-anchor', 'middle')
-    //         .text('Price ($)');
-
-    //     const svgElements = document.querySelectorAll("svg");
-
-    //     // Iterate over each SVG element and set the height
-    //     svgElements.forEach(svgElement => {
-    //         svgElement.style.height = "500px";
-    //     });
-    // }
-
-
-
-
     const findBuySellPoints = (prices) => {
         let n = prices.length;
         let buySellPoints = [];
@@ -157,13 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function createGraph(stockTicker, selectedDate, currentDate, investmentAmount) {
-        // const existingGraph = document.querySelector('#chart-container svg:nth-child(2)');
-        // const svg = d3.select('#chart-container svg');
-        // svg.selectAll('*').remove();
-        // if (existingGraph) {
-        //     existingGraph.remove();
-        // }
-
         removeExistingGraph();
         removeExistingGraph();
 
@@ -358,39 +294,6 @@ svg.selectAll('.sell-circle')
     .delay((d, i) => i * 70) // Delay each circle by 500 milliseconds times its index
     .duration(1000) // Transition duration 1000 milliseconds (or adjust as needed)
     .attr('r', 2); // End with radius 5 for visible state
-
-
-
-
-
-            // Add circles for data points
-            // svg.selectAll('.dot')
-            // .data(dates_prices)
-            // .enter().append('circle')
-            // .attr('class', 'dot')
-            // .attr('cx', d => x(d.date) + x.bandwidth() / 2)
-            // .attr('cy', d => y(d.price))
-            // .attr('r', 0)  // Initial radius set to 0
-            // .transition()
-            // .delay(function(d, i) {
-            //     return i * 100;  // Add delay based on index to transition circles chronologically
-            // })
-            // .duration(500)  // Transition duration in milliseconds
-            // .attr('r', 5)  // Final radius set to 5;
-            // .on('mouseover', function(d) {
-            //     const mousePrice = d.price;
-            //     const tooltip = d3.select('#tooltip');
-            //     tooltip.transition().duration(200).style('opacity', 0.9);
-            //     tooltip.html(`Price: $${mousePrice}`)
-            //         .style('left', d3.event.pageX + 'px')  // Use d3.event.pageX instead of event.pageX
-            //         .style('top', d3.event.pageY - 28 + 'px');  // Use d3.event.pageY instead of event.pageY
-            // })
-
-            // .on('mouseout', function() {
-            //     // Hide tooltip on mouseout
-            //     d3.select('#tooltip').transition().duration(500).style('opacity', 0);
-            // });
-
             const svgElements = document.querySelectorAll("svg");
 
             // Iterate over each SVG element and set the height
@@ -418,24 +321,6 @@ svg.selectAll('.sell-circle')
             const netProfit = calculateInvestedProfit(investmentAmount, buySellPoints);
             // profitElement.textContent += `$${netProfit.toFixed(2)}`;
 
-
-
-
-            // Create a new SVG group for the bar plot
-            // const barPlot = svg.append('g').attr('class', 'bar-plot');
-
-            // const barPlot = d3.select('#chart-container')
-            // .append('svg')
-            // .attr('width', width + margin.left + margin.right)
-            // .attr('height', height + margin.top + margin.bottom)
-            // .append('g')
-            // .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-            // .append('g').attr('class', 'bar-plot');
-
-            // Calculate gross revenue for each buy-sell pair
-            // const grossRevenues = [];
-            // let grossRevenueFromInvestment = investmentAmount;
             let currentProfit = 0;
             let profitArray = [];
             for (let i = 0; i < buySellPoints.length; i++) {
@@ -446,23 +331,6 @@ svg.selectAll('.sell-circle')
                 profitArray[i] *= final_num_shares;
 
             }
-
-
-            // const formattedDates = {
-
-            //     for (let i=0; i<buySellPoints.length; i++) {
-            //         const buyDate = dates[buySellPoints.buy.day[i]-1];
-            //         const sellDate = dates[buySellPoints.sell.day[i]-1];
-            //         return `Buy: ${buyDate}, Sell: ${sellDate}`;
-
-            //     }
-                // const buyDate = dates[point.buy.day];
-                // const sellDate = dates[point.sell.day];
-                // return `Buy: ${buyDate}, Sell: ${sellDate}`;
-
-                // dates = buySellPoints.buy.day[i], buySellPoints.sell.day[i]
-
-            // };
 
             const formattedDates = [];
 
@@ -475,72 +343,7 @@ svg.selectAll('.sell-circle')
 
             }
 
-            // Define X and Y scales for the bar plot
-            // const xBarScale = d3.scaleBand().range([0, width]).padding(0.1);
-            // const yBarScale = d3.scaleLinear().domain([0, d3.max(profitArray)]).nice().range([height, 0]);
-
-            // const yBarScale = d3.scaleLinear().domain([0, (Math.max(...profitArray) * 1.25)]).nice().range([height, 0]);
-
-            // // Add bars to the bar plot
-            // barPlot.selectAll('.bar')
-            // .data(profitArray)
-            // .enter().append('rect')
-            // .attr('class', 'bar')
-            // .attr('x', (d, i) => xBarScale(i))
-            // .attr('y', d => yBarScale(d))
-            // // .attr('width', xBarScale.bandwidth())
-            // // .attr('height', d => height - yBarScale(d))
-            // .attr('fill', 'steelblue')
-            // .attr('data-index', (d, i) => i)
-                                                                                // .on('mouseover', function(event) {
-                                                                                //     const index = d3.select(this).attr('data-index');
-                                                                                //     const tooltip = d3.select('#tooltip');
-                                                                                //     tooltip.transition().duration(200).style('opacity', 0.9);
-                                                                                //     tooltip.html(`Trade Dates: ${formattedDates[index]}`)
-                                                                                //         .style('left', event.pageX + 'px')
-                                                                                //         .style('top', event.pageY - 28 + 'px');
-                                                                                // })
-                                                                                // .on('mouseout', function() {
-                                                                                //     d3.select('#tooltip').transition().duration(500).style('opacity', 0);
-                                                                                // });
-
-            // // Add labels for X and Y axes of the bar plot
-            // const xAxis = d3.axisBottom(xBarScale);
-            // // const yAxis = d3.axisLeft(yBarScale);
-            // const yAxis = d3.axisLeft(yBarScale)
-            // .tickFormat(d3.format('$,'));
-
-
-            // barPlot.append('g')
-            // .attr('class', 'x-axis')
-            // // .attr('transform', 'translate(0,' + height + ')')
-            // .call(xAxis);
-
-            // barPlot.append('g')
-            // .attr('class', 'y-axis')
-            // .call(yAxis);
-
-                // .call(d3.axisBottom(xBarScale)
-                //     .tickFormat((d, i) => `Trade ${i + 1}`)
-                // );
-
-            // barPlot.append("text")
-            //     .attr('class', 'y-axis-label')
-            //     .attr("transform", "rotate(-90)")
-            //     .attr("y", 0 - margin.left)
-            //     .attr("x", 0 - (height / 2))
-            //     .attr("dy", "1em")
-            //     .style("text-anchor", "middle")
-            //     .text("Net accumulating profit ($)")
-            //     .attr('class', 'chart-title')
-            //     .attr('x', width / 2)
-            //     .attr('y', 0 - margin.top / 2)
-            //     .attr('text-anchor', 'middle')
-            //     .style('font-size', '18px')
-            //     .text('Net accumulating profit ($)');
-
-
-                        // Set the dimensions of the canvas
+            // Set the dimensions of the canvas
             var bpmargin = { top: 60, right: 20, bottom: 50, left: 50 };
             var bpwidth = 600 - bpmargin.left - bpmargin.right;
             var bpheight = 400 - bpmargin.top - bpmargin.bottom;
@@ -624,18 +427,6 @@ svg.selectAll('.sell-circle')
             .style('font-size', '18px')
             .style('font-weight', 'bold')
             .text("Net Accumulated Profit");
-
-
-            // const bpElements = document.querySelectorAll("svg");
-
-            // // Iterate over each SVG element and set the height
-            // bpElements.forEach(svgElement => {
-            //     svgElement.style.height = bpheight + bpmargin.top + bpmargin.bottom + 'px'; // Set the height including top and bottom margins
-            // });
-
-
-
-
         })
 
         .catch(error => {
