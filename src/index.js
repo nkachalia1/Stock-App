@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         removeExistingGraph();
 
         // fetch(`https://api.stockdata.org/v1/data/eod?symbols=${stockTicker}&api_token=Bc9kdoAsBS9RinZk1vqXCzh5owpQenRGf4UrSJl6&date_from=${selectedDate}&date_to=${currentDate}`)
-        fetch(`https://api.marketstack.com/v1/eod?access_key=a102fb3f246cfc748eabb0cbafd35e2b&symbols=${stockTicker}&date_from=${selectedDate}&date_to=${currentDate}`)
+        fetch(`https://api.marketstack.com/v1/eod?access_key=be6bfe4dafee7f9d6e7bb15642e1bdb5&symbols=${stockTicker}&date_from=${selectedDate}&date_to=${currentDate}`)
         .then(response => response.json())
         .then(data => {
             const closingPrices = data.data.map(day => day.close);
